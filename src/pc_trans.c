@@ -312,7 +312,7 @@ void pc__trans_resp(pc_client_t* client, unsigned int req_id, int rc, const char
     target = NULL;
     pc_mutex_lock(&client->req_mutex);
     QUEUE_FOREACH(q, &client->req_queue) {
-        req= (pc_request_t* )QUEUE_DATA(q, pc_common_req_t, queue);
+        req = (pc_request_t* )QUEUE_DATA(q, pc_common_req_t, queue);
         if (req->req_id == req_id) {
 
             pc_lib_log(PC_LOG_INFO, "pc__trans_resp - fire resp event, req_id: %u, rc: %s",
@@ -350,3 +350,23 @@ void pc__trans_resp(pc_client_t* client, unsigned int req_id, int rc, const char
     }
 }
 
+const char* pc_trans_get_route_by_req_id(pc_client_t* client, unsigned int req_id)
+{
+    const char* route = NULL;
+    QUEUE* q;
+    pc_request_t* req;
+
+    pc_mutex_lock(&client->req_mutex);
+
+    QUEUE_FOREACH(q, &client->req_queue) {
+        req = (pc_request_t* )QUEUE_DATA(q, pc_common_req_t, queue);
+        if (req->req_id == req_id) {
+            route = pc_lib_strdup(req->base.route);
+            break;
+        }
+    }
+
+    pc_mutex_unlock(&client->req_mutex);
+
+    return route;
+}

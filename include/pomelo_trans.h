@@ -68,6 +68,10 @@ PC_EXPORT void pc_trans_sent(pc_client_t* client, unsigned int seq_num, int rc);
  */
 PC_EXPORT void pc_trans_resp(pc_client_t* client, unsigned int req_id, int rc, const char* resp);
 
+/**
+ * get route by request id, if non-existent, return NULL
+ */
+PC_EXPORT const char* pc_trans_get_route_by_req_id(pc_client_t* client, unsigned int req_id);
 
 #ifdef __cplusplus
 }
