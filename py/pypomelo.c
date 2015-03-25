@@ -137,6 +137,7 @@ static int local_storage_cb(pc_local_storage_op_t op, char* data, size_t* len, v
     PyObject* result = NULL;
     int ret = -1;
     char* res = NULL;
+    int res_len = 0;
 
     PyGILState_STATE state;
     state = PyGILState_Ensure();
@@ -182,11 +183,11 @@ static int local_storage_cb(pc_local_storage_op_t op, char* data, size_t* len, v
         PyGILState_Release(state);
 
         if (res) {
-            *len = strlen(res);
-            if (*len == 0) {
+            res_len = strlen(res);
+            if (res_len == 0) {
                 return -1;
             }
-
+            *len = res_len + 1;
             if (data) {
                 strcpy(data, res);
             }
